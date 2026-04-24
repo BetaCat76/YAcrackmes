@@ -116,14 +116,14 @@ static DWORD WINAPI AntiDebugThread(LPVOID)
             TerminateProcess(GetCurrentProcess(), 0xDEAD);
         Sleep(500);
     }
-    // unreachable
-    return 0;
 }
 
 // ── TLS callback ──────────────────────────────────────────────────────────────
 
 static void NTAPI TlsCallback(PVOID /*hModule*/, DWORD dwReason, PVOID /*pContext*/)
 {
+    // Only DLL_PROCESS_ATTACH spawns the thread; DLL_THREAD_ATTACH calls are
+    // intentionally ignored to avoid launching redundant monitoring threads.
     if (dwReason == DLL_PROCESS_ATTACH) {
         HANDLE hThread = CreateThread(nullptr, 0, AntiDebugThread, nullptr, 0, nullptr);
         if (hThread != nullptr)
