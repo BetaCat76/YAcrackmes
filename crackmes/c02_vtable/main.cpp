@@ -78,28 +78,30 @@ public:
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 int main() {
-    Player  player("Hero",   100, 50);
-    Monster monster("Goblin", 60);
+    GameObj* player = new Player("Hero", 100, 50);
+    GameObj* monster = new Monster("Goblin", 60);
+    // Player  player("Hero",   100, 50);
+    // Monster monster("Goblin", 60);
 
     std::println("=== Battle Start ===");
-    std::println("Player  : {} | HP {} | MP {}", player.name,  player.hp,  player.mp);
-    std::println("Monster : {} | HP {}", monster.name, monster.hp);
+    std::println("Player  : {} | HP {} | MP {}", player->name,  player->hp,  player->mp);
+    std::println("Monster : {} | HP {}", monster->name, monster->hp);
     std::println("");
 
     int round = 1;
-    while (player.isAlive() && monster.isAlive()) {
+    while (player->isAlive() && monster->isAlive()) {
         std::println("-- Round {} --", round);
 
-        player.attack(monster);
-        if (!monster.isAlive()) break;
+        player->attack(*monster);
+        if (!monster->isAlive()) break;
 
-        monster.attack(player);
-        if (!player.isAlive()) break;
+        monster->attack(*player);
+        if (!player->isAlive()) break;
 
         // Every 3 rounds each side recovers resources
         if (round % 3 == 0) {
-            player.recover();
-            monster.recover();
+            player->recover();
+            monster->recover();
         }
         std::println("");
         ++round;
@@ -107,10 +109,14 @@ int main() {
 
     std::println("");
     std::println("=== Battle End ===");
-    if (player.isAlive())
-        std::println("{} wins!", player.name);
+    if (player->isAlive())
+        std::println("{} wins!", player->name);
     else
-        std::println("{} wins!", monster.name);
+        std::println("{} wins!", monster->name);
+
+    delete player;
+    delete monster;
+    std::println("delete success...");
 
     return 0;
 }
