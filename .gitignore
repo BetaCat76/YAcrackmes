@@ -1,3 +1,44 @@
+# ── Build directories ────────────────────────────────────────────────────────
+build/
+out/
+
+# ── CMake generated files ────────────────────────────────────────────────────
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
+_deps/
+
+# ── Ninja ────────────────────────────────────────────────────────────────────
+.ninja_deps
+.ninja_log
+build.ninja
+rules.ninja
+
+# ── MSVC / Visual Studio ─────────────────────────────────────────────────────
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+x64/
+x86/
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+# ── Compiled artifacts ───────────────────────────────────────────────────────
 # Prerequisites
 *.d
 
@@ -14,7 +55,7 @@
 # Linker files
 *.ilk
 
-# Debugger Files
+# Debugger files
 *.pdb
 
 # Compiled Dynamic libraries
@@ -37,5 +78,6 @@
 *.out
 *.app
 
-# debug information files
+# Debug information files
 *.dwo
+
