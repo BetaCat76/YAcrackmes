@@ -20,6 +20,20 @@ if(MSVC)
         /WX-            # Warnings are not errors (relax for crackme dev)
         /EHsc           # Standard C++ exception handling
     )
+
+    # Release build: strip all symbols and debug information
+    # Remove any debug-info compile flags that CMake may inject into Release
+    foreach(_flag /Zi /ZI /Z7)
+        string(REPLACE "${_flag}" "" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+        string(REPLACE "${_flag}" "" CMAKE_C_FLAGS_RELEASE   "${CMAKE_C_FLAGS_RELEASE}")
+    endforeach()
+
+    # Linker: no PDB, dead-code elimination, identical-COMDAT folding
+    add_link_options(
+        $<$<CONFIG:Release>:/DEBUG:NONE>
+        $<$<CONFIG:Release>:/OPT:REF>
+        $<$<CONFIG:Release>:/OPT:ICF>
+    )
 endif()
 
 # ── Crackme targets ──────────────────────────────────────────────────────────
@@ -27,3 +41,4 @@ endif()
 # add_subdirectory() call here pointing to it.  See README.md for details.
 
 add_subdirectory(crackmes/c01_helloworld)
+add_subdirectory(crackmes/c02_vtable)
