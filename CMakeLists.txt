@@ -42,3 +42,4 @@ endif()
 
 add_subdirectory(crackmes/c01_helloworld)
 add_subdirectory(crackmes/c02_vtable)
+add_subdirectory(crackmes/c03_TLS1)

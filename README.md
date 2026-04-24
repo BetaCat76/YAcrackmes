@@ -32,7 +32,13 @@ YAcrackmes/
 ├── CMakeLists.txt           # Root build configuration
 ├── CMakePresets.json        # MSVC + Ninja build presets
 ├── crackmes/
-│   └── c01_helloworld/      # Placeholder crackme
+│   ├── c01_helloworld/      # Placeholder crackme
+│   │   ├── CMakeLists.txt
+│   │   └── main.cpp
+│   ├── c02_vtable/          # Virtual-dispatch crackme
+│   │   ├── CMakeLists.txt
+│   │   └── main.cpp
+│   └── c03_TLS1/            # TLS-callback anti-debug crackme
 │       ├── CMakeLists.txt
 │       └── main.cpp
 └── README.md
