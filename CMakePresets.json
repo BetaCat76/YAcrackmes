@@ -1,0 +1,46 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": { "major": 3, "minor": 28, "patch": 0 },
+  "configurePresets": [
+    {
+      "name": "msvc-ninja-debug",
+      "displayName": "MSVC + Ninja (Debug)",
+      "description": "Configure with MSVC toolchain and Ninja generator in Debug mode",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/debug",
+      "toolset": "host=x64",
+      "architecture": "x64",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_COMPILER":   "cl",
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "msvc-ninja-release",
+      "displayName": "MSVC + Ninja (Release)",
+      "description": "Configure with MSVC toolchain and Ninja generator in Release mode",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/release",
+      "toolset": "host=x64",
+      "architecture": "x64",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER":   "cl",
+        "CMAKE_CXX_COMPILER": "cl"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build-debug",
+      "displayName": "Build Debug",
+      "configurePreset": "msvc-ninja-debug"
+    },
+    {
+      "name": "build-release",
+      "displayName": "Build Release",
+      "configurePreset": "msvc-ninja-release"
+    }
+  ]
+}
