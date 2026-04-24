@@ -17,8 +17,8 @@ public:
     // Attack the target, dealing damage to its HP
     virtual void attack(GameObj& target) = 0;
 
-    // Restore own MP
-    virtual void restoreMp() = 0;
+    // Restore own MP (or other resources for subclasses that lack MP)
+    virtual void recover() = 0;
 
     bool isAlive() const { return hp > 0; }
 };
@@ -45,7 +45,7 @@ public:
                      name, target.name, kAttackDamage, target.hp);
     }
 
-    void restoreMp() override {
+    void recover() override {
         mp += kMpRestore;
         std::println("[{}] restores {} MP. ({} MP now)", name, kMpRestore, mp);
     }
@@ -69,7 +69,7 @@ public:
     }
 
     // Monsters have no MP; they restore a small amount of HP instead
-    void restoreMp() override {
+    void recover() override {
         hp += kHpRestore;
         std::println("[{}] regenerates {} HP. ({} HP now)", name, kHpRestore, hp);
     }
@@ -88,7 +88,7 @@ int main() {
 
     int round = 1;
     while (player.isAlive() && monster.isAlive()) {
-        std::println("-- Round {} --", round++);
+        std::println("-- Round {} --", round);
 
         player.attack(monster);
         if (!monster.isAlive()) break;
@@ -98,10 +98,11 @@ int main() {
 
         // Every 3 rounds each side recovers resources
         if (round % 3 == 0) {
-            player.restoreMp();
-            monster.restoreMp();
+            player.recover();
+            monster.recover();
         }
         std::println("");
+        ++round;
     }
 
     std::println("");
