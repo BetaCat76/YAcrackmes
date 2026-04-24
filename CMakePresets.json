@@ -8,8 +8,6 @@
       "description": "Configure with MSVC toolchain and Ninja generator in Debug mode",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/debug",
-      "toolset": "host=x64",
-      "architecture": "x64",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_COMPILER":   "cl",
@@ -22,8 +20,6 @@
       "description": "Configure with MSVC toolchain and Ninja generator in Release mode",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/release",
-      "toolset": "host=x64",
-      "architecture": "x64",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "CMAKE_C_COMPILER":   "cl",
