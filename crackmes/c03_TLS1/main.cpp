@@ -21,41 +21,41 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 
-#include <array>
 #include <cctype>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <print>
-#include <string>
 
 // ── Flag & checksum ───────────────────────────────────────────────────────────
 
-static constexpr const char* kFlag = "FLAG{TLS_C4llb4ck_K1ll5_D3bugg3r}";
+static const char kFlag[] = "FLAG{TLS_C4llb4ck_K1ll5_D3bugg3r}";
 
 // Expected bytes after decryption: "WELCOME!"
-static constexpr std::array<uint8_t, 8> kChecksum = {
+static const uint8_t kChecksum[8] = {
     0x57, 0x45, 0x4C, 0x43, 0x4F, 0x4D, 0x45, 0x21
 };
 
 // ── License verification ──────────────────────────────────────────────────────
 
-static bool verify_license(const std::string& input)
+static bool verify_license(const char* input)
 {
-    // Strip dashes/spaces and upper-case
-    std::string clean;
-    clean.reserve(16);
-    for (char c : input) {
-        if (c == '-' || c == ' ') continue;
-        clean += static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+    // Strip dashes/spaces and upper-case into a fixed buffer
+    char clean[17];
+    int  n = 0;
+    for (const char* p = input; *p && *p != '\n' && *p != '\r'; ++p) {
+        if (*p == '-' || *p == ' ') continue;
+        if (n >= 16) return false;
+        clean[n++] = static_cast<char>(toupper(static_cast<unsigned char>(*p)));
     }
-    if (clean.size() != 16) return false;
+    if (n != 16) return false;
+    clean[16] = '\0';
 
     // Parse 8 hex byte pairs
     uint8_t bytes[8];
     for (int i = 0; i < 8; ++i) {
         char hex[3] = { clean[i * 2], clean[i * 2 + 1], '\0' };
         char* endp  = nullptr;
-        unsigned long val = std::strtoul(hex, &endp, 16);
+        unsigned long val = strtoul(hex, &endp, 16);
         if (endp != hex + 2) return false;
         bytes[i] = static_cast<uint8_t>(val);
     }
@@ -83,15 +83,9 @@ static bool is_x64dbg_running()
         pe.dwSize = sizeof(pe);
         if (Process32FirstW(snap, &pe)) {
             do {
-                // Lower-case the name for a case-insensitive comparison
-                wchar_t lower[MAX_PATH];
-                std::size_t len = std::wcslen(pe.szExeFile);
-                for (std::size_t k = 0; k < len; ++k)
-                    lower[k] = static_cast<wchar_t>(std::towlower(pe.szExeFile[k]));
-                lower[len] = L'\0';
-
-                if (std::wcscmp(lower, L"x64dbg.exe") == 0 ||
-                    std::wcscmp(lower, L"x32dbg.exe") == 0) {
+                // _wcsicmp: case-insensitive compare, avoids manual tolower loop
+                if (_wcsicmp(pe.szExeFile, L"x64dbg.exe") == 0 ||
+                    _wcsicmp(pe.szExeFile, L"x32dbg.exe") == 0) {
                     CloseHandle(snap);
                     return true;
                 }
@@ -141,16 +135,17 @@ extern "C" PIMAGE_TLS_CALLBACK pTlsCallback = TlsCallback;
 
 int main()
 {
-    std::println("=== License Key Verifier ===");
-    std::println("Enter license key (format: XXXX-XXXX-XXXX-XXXX):");
+    puts("=== License Key Verifier ===");
+    puts("Enter license key (format: XXXX-XXXX-XXXX-XXXX):");
 
-    std::string key;
-    std::getline(std::cin, key);
+    char key[64];
+    if (!fgets(key, sizeof(key), stdin))
+        return 1;
 
     if (verify_license(key))
-        std::println("Correct! {}", kFlag);
+        printf("Correct! %s\n", kFlag);
     else
-        std::println("Wrong license key. Try again.");
+        puts("Wrong license key. Try again.");
 
     return 0;
 }
